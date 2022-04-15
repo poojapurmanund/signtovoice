@@ -1,9 +1,13 @@
+import { version_converter } from "@tensorflow/tfjs"
+
+
 // Define our labelmap
 const labelMap = {
     1:{name:'a', color:'red'},
     2:{name:'b', color:'yellow'},
 }
 
+export var word=""
 // Define a drawing function
 export const drawRect = (boxes, classes, scores, threshold, imgWidth, imgHeight, ctx)=>{
     for(let i=0; i<=boxes.length; i++){
@@ -13,6 +17,13 @@ export const drawRect = (boxes, classes, scores, threshold, imgWidth, imgHeight,
             const text = classes[i]
             
             // Set styling
+            // console.log(labelMap[text]['name'])
+
+            setInterval(() => {
+                // word = word + labelMap[text]['name']
+                createword(text)
+              }, 5000);
+
             ctx.strokeStyle = labelMap[text]['color']
             ctx.lineWidth = 10
             ctx.fillStyle = 'white'
@@ -25,4 +36,9 @@ export const drawRect = (boxes, classes, scores, threshold, imgWidth, imgHeight,
             ctx.stroke()
         }
     }
+    
+}
+
+const createword = (text) => {
+    word = word + labelMap[text]['name']
 }

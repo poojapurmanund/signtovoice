@@ -5,6 +5,8 @@ import Webcam from "react-webcam";
 import "./App.css";
 // 2. TODO - Import drawing utility here
 import {drawRect} from "./utilities"; 
+import * as utils from './utilities';
+
 
 function App() {
   const webcamRef = useRef(null);
@@ -21,8 +23,9 @@ function App() {
     //  Loop and detect hands
     setInterval(() => {
       detect(net);
-    }, 16.7);
+    }, 100);
   };
+  
 
   const detect = async (net) => {
     // Check data is available
@@ -50,17 +53,17 @@ function App() {
       const casted = resized.cast('int32')
       const expanded = casted.expandDims(0)
       const obj = await net.executeAsync(expanded)
-      console.log(obj)
 
       const boxes = await obj[4].array()
       const classes = await obj[5].array()
-      const scores = await obj[1].array() 
+      const scores = await obj[1].array()
+
 
       // scores -> num between 0 and 1
       // classes -> whole num, like 1 or 2 representing classes 
       // boxes -> array of 4, no negatives, between 0 and 1 for each
 
-      console.log(scores)
+      
 
       // Draw mesh
       const ctx = canvasRef.current.getContext("2d");
@@ -70,6 +73,8 @@ function App() {
 
       requestAnimationFrame(()=>{drawRect(boxes[0], classes[0], scores[0], 0.7, videoWidth, videoHeight, ctx)}); 
 
+      console.log(utils.word)
+
       tf.dispose(img)
       tf.dispose(resized)
       tf.dispose(casted)
@@ -77,6 +82,12 @@ function App() {
       tf.dispose(obj)
     }
   };
+
+  const textToSpeech = () => {
+    console.log("hi")
+    // speak({ text: 'Hello React Js' })
+
+  }
 
   useEffect(()=>{runCoco()},[]);
 
@@ -113,7 +124,10 @@ function App() {
             height: 480,
           }}
         />
+        
       </header>
+      <button className="btn" onClick={textToSpeech}>Convert</button>
+      
     </div>
   );
 }
